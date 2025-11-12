@@ -97,6 +97,7 @@ coverage/
 .idea/
 
 # Model weights
+weights/
 checkpoints/
 
 # movies format and results
