@@ -25,5 +25,5 @@ task:
   visits: true
 
 
-
-yolo track model=/home/bohbot/workspace/weight/nectar.pt source=/home/bohbot/workspace/images/albo_date save_txt=true line_width=1 conf=0.7
+"\\wsl.localhost\Ubuntu\home\bohbot\Evyatar\runs\v3"
+yolo predict model=/home/bohbot/Evyatar/runs/detect/1000_each/weights/last.pt source=/runs/v3 save_txt=true line_width=1 conf=0.2 save_conf=false
