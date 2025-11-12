@@ -13,6 +13,7 @@ src/tests/vids
 runs/
 plots/
 src/example
+weights/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
