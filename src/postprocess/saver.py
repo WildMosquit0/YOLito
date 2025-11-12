@@ -58,6 +58,15 @@ class ResultsParser:
 
         print(f"Results saved to {csv_file_path}")
 
+    def _default_slice_track_id(self, source_identifier: str, frame_index: int, box_idx: int) -> int:
+        """
+        Guarantee unique track ids for slicing outputs even before running the Kalman tracker.
+        Track IDs combine the frame index and the detection index so downstream analysis
+        can treat them as unique trajectories when SAHI tracking is disabled.
+        """
+        safe_frame = frame_index if frame_index is not None else 0
+        return safe_frame * 1_000_000 + box_idx
+
     def parse_and_save_slice(self, predictions: List[tuple]):
         
         csv_file_path = os.path.join(self.output_dir, self.csv_filename)
@@ -74,8 +83,7 @@ class ResultsParser:
                 (box_idx, x, y, w, h, confidence,
                     source_identifier, frame_index, img_h, img_w) = pred
                 label = 1     # Default label
-                track_id = None  # Default track id
-
+                track_id = self._default_slice_track_id(source_identifier, frame_index, box_idx)
                 writer.writerow([
                     frame_index, box_idx, x, y, w, h, confidence, label, track_id,
                     source_identifier, img_h, img_w

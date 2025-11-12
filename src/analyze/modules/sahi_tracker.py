@@ -5,14 +5,12 @@ compute object trajectories, and plot the (x, y) centers as lines.
 """
 
 from __future__ import print_function
-import os
+
 import numpy as np
 import pandas as pd
-import time
-import matplotlib.pyplot as plt
+from typing import Dict
 from filterpy.kalman import KalmanFilter
 from scipy.optimize import linear_sum_assignment
-from src.utils.common import create_output_dir
 
 np.random.seed(0)
 
@@ -241,6 +239,62 @@ class sahi_tracker(object):
 
 # ------------------ Main routine to load CSV, track, and plot ------------------
 
+def _detections_from_frame(frame_df: pd.DataFrame) -> np.ndarray:
+    """
+    Convert a frame slice to the [x1, y1, x2, y2, score] matrix expected by the tracker.
+    """
+    if frame_df.empty:
+        return np.empty((0, 5))
+
+    dets = frame_df[['x', 'y', 'w', 'h', 'confidence']].to_numpy(dtype=float, copy=True)
+    dets[:, 2] = dets[:, 0] + dets[:, 2]
+    dets[:, 3] = dets[:, 1] + dets[:, 3]
+    return dets
+
+
+def _match_tracks_to_detections(detections: np.ndarray, tracks: np.ndarray, threshold: float = 0.05) -> Dict[int, int]:
+    """
+    Match each detection row to the most likely tracker id using IoU to keep the association
+    consistent with the Kalman filter updates.
+    Returns a mapping of {detection_row_index: track_id}.
+    """
+    assignments: Dict[int, int] = {}
+    if detections.size == 0 or tracks.size == 0:
+        return assignments
+
+    iou_matrix = iou_batch(detections[:, :4], tracks[:, :4])
+    if iou_matrix.size == 0:
+        return assignments
+
+    while True:
+        max_index = np.unravel_index(np.argmax(iou_matrix), iou_matrix.shape)
+        max_iou = iou_matrix[max_index]
+        if max_iou < threshold:
+            break
+        det_idx, track_idx = max_index
+        assignments[det_idx] = int(tracks[track_idx, 4])
+        iou_matrix[det_idx, :] = -1
+        iou_matrix[:, track_idx] = -1
+
+    return assignments
+
+
+def _fill_missing_track_ids(track_ids: np.ndarray) -> np.ndarray:
+    """
+    Replace any -1 placeholders with unique positive ids so downstream aggregation
+    never encounters NaNs when SAHI tracking cannot associate a detection.
+    """
+    missing = np.where(track_ids < 0)[0]
+    if not len(missing):
+        return track_ids
+
+    next_id = int(track_ids.max() if track_ids.max() > 0 else 0) + 1
+    for idx in missing:
+        track_ids[idx] = next_id
+        next_id += 1
+    return track_ids
+
+
 def main(csv_file='results.csv', output_dir='.'):
     try:
         df = pd.read_csv(csv_file, sep=',')
@@ -250,43 +304,20 @@ def main(csv_file='results.csv', output_dir='.'):
         print("Error reading CSV file:", e)
         return
 
-    
-    
-    # --- STEP 2: Prepare the detection data ---
-    # If your frame numbers (image_idx) start at 0, add 1 to start at 1.
-    df['frame'] = df['image_idx'] + 1
-    df.sort_values('frame', inplace=True)
-
-    # --- STEP 3: Initialize the tracker ---
+    df['frame'] = df['image_idx'].astype(int) + 1
+    df.sort_values(['frame', 'image_idx', 'box_idx'], inplace=True)
     tracker = sahi_tracker(max_age=10000, min_hits=0, iou_threshold=0.001)
-    
-    output_tracks = []
 
-    # --- STEP 4: Process detections frame by frame ---
-    frames = sorted(df['frame'].unique())
-    for frame in frames:
-        frame_data = df[df['frame'] == frame]
-        dets = []
-        for _, row in frame_data.iterrows():
-            # Convert [x, y, w, h] to [x1, y1, x2, y2]
-            x1 = row['x']
-            y1 = row['y']
-            x2 = x1 + row['w']
-            y2 = y1 + row['h']
-            score = row['confidence']
-            dets.append([x1, y1, x2, y2, score])
-        dets = np.array(dets)
+    track_ids = np.full(len(df), -1, dtype=int)
 
+    for frame_value, frame_data in df.groupby('frame', sort=True):
+        dets = _detections_from_frame(frame_data)
         tracks = tracker.update(dets)
-        for track in tracks:
-            # track format: [x1, y1, x2, y2, track_id]
-            x1, y1, x2, y2, track_id = track
-            output_tracks.append(track_id)
+        assignments = _match_tracks_to_detections(dets, tracks)
+        frame_indices = frame_data.index.to_numpy()
+        for det_idx, track_id in assignments.items():
+            track_ids[frame_indices[det_idx]] = track_id
 
-    # Append the track IDs to the DataFrame.
-    df['track_id'] = output_tracks
-
-    # Build the full output CSV file path.
-    
+    df['track_id'] = _fill_missing_track_ids(track_ids)
     df.to_csv(csv_file, index=False)
-    
+    print(f"Updated SAHI slicing CSV with Kalman-filtered track IDs: {csv_file}")

@@ -27,6 +27,25 @@ cd path/to/Mosquito_Supermodel
 pip install -r requirements.txt
 ```
 
+### Editable install (new)
+
+The repository now exposes an installable package so you can depend on it directly:
+
+```bash
+python -m pip install -e .
+```
+
+Installing the package registers the `mosquito-supermodel` console script and enables imports such as:
+
+```python
+from mosquito_supermodel import build_runtime_config, run_task
+
+config = build_runtime_config("infer")
+run_task(config)
+```
+
+The CLI respects the legacy arguments (`--task/--task_name`) while adding niceties like `--config` overrides and opt-out profiling. By default it still looks for YAML files under `configs/`, but you can point it somewhere else via the `--config` flag or the `MOSQUITO_SUPERMODEL_CONFIG_DIR` environment variable when packaging the project inside Docker images.
+
 ---
 
 ## ⚙️ Configuration
@@ -59,7 +78,7 @@ output_dir: path/to/save/project  # Created automatically if not exists
 sahi:
   slice_size: 640          # Slice each frame into 640×640 patches (recommended for this model)
   overlap_ratio: 0.2       # 20% overlap between adjacent slices for better detection coverage
-  track: true              # Enable tracking across sliced frames
+  track: true              # Enable Kalman-filter tracking so sliced outputs get stable track_ids
 
 save_animations: true      # Save predicted video
 change_analyze_conf: true  # Automatically update configs/analyze.yaml
@@ -139,11 +158,15 @@ All results are saved as `.csv` summaries and visual plots in the configured out
 ### Run Inference
 ```bash
 python main.py --task_name infer
+# or, after installing the package:
+mosquito-supermodel --task infer
 ```
 
 ### Run Analysis
 ```bash
 python main.py --task_name analyze
+# or
+mosquito-supermodel --task analyze
 ```
 
 ---
@@ -153,7 +176,5 @@ python main.py --task_name analyze
 - `results.csv`: merged behavior metrics
 - `videos/`, `frames/`, `csvs/`: organized intermediate outputs
 - `.png` plots: for visits, heatmaps, trajectories
-
-
 
 
