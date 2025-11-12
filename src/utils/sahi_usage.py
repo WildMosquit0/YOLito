@@ -1,6 +1,7 @@
 import os
 import cv2
 import csv
+from pathlib import Path
 from sahi.predict import get_sliced_prediction
 from sahi import AutoDetectionModel
 
@@ -22,10 +23,13 @@ class sahi_usage:
         self.images_dir = config.get('images_dir')
         self.output_dir = os.path.join(config['output_dir'])
         self.csv_filename = config.get('csv_filename', 'results.csv')
-        self.save_animations = config.get('save_animations', False)
+        self.save_animations = bool(config.get('save_animations', False))
+        self.task_output_dir = os.path.join(self.output_dir, self.task)
+        self.slice_visuals_dir = os.path.join(self.task_output_dir, "slices")
 
         if not os.path.exists(self.output_dir):
             os.makedirs(self.output_dir)
+        os.makedirs(self.task_output_dir, exist_ok=True)
 
     # --- Model Loading ---
     def load_model(self, device="cuda:0"):
@@ -71,7 +75,61 @@ class sahi_usage:
             overlap_height_ratio=overlap_height_ratio,
             overlap_width_ratio=overlap_width_ratio
         )
-        return result.object_prediction_list
+        return result
+
+    def _unique_visual_name(self, identifier: str) -> str:
+        safe_identifier = identifier.replace(os.sep, "_")
+        base = f"{safe_identifier}_sliced"
+        candidate = base
+        counter = 1
+        while os.path.exists(os.path.join(self.slice_visuals_dir, f"{candidate}.png")):
+            candidate = f"{safe_identifier}_sliced__{counter}"
+            counter += 1
+        return candidate
+
+    def _maybe_save_visual(self, detection_result, identifier: str):
+        if not self.save_animations:
+            return None
+        os.makedirs(self.slice_visuals_dir, exist_ok=True)
+        file_name = self._unique_visual_name(identifier)
+        detection_result.export_visuals(export_dir=self.slice_visuals_dir, file_name=file_name)
+        return os.path.join(self.slice_visuals_dir, f"{file_name}.png")
+
+    def _export_video_from_visuals(self, frame_paths, source_video_path: str, fps: float) -> None:
+        if not (self.save_animations and frame_paths):
+            return
+        output_name = f"{Path(source_video_path).stem}_sahi.avi"
+        output_path = os.path.join(self.task_output_dir, output_name)
+        self._write_video_from_frames(frame_paths, fps, output_path)
+
+    def _write_video_from_frames(self, frame_paths, fps, output_path) -> None:
+        if not frame_paths:
+            return
+        first_frame = cv2.imread(frame_paths[0])
+        if first_frame is None:
+            print(f"Unable to read first frame for video export: {frame_paths[0]}")
+            return
+        height, width = first_frame.shape[:2]
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        writer = cv2.VideoWriter(
+            output_path,
+            cv2.VideoWriter_fourcc(*"MJPG"),
+            fps if fps and fps > 0 else 30.0,
+            (width, height),
+        )
+        if not writer.isOpened():
+            print(f"Failed to initialize video writer for {output_path}")
+            return
+        try:
+            for frame_path in frame_paths:
+                frame = cv2.imread(frame_path)
+                if frame is None:
+                    continue
+                if frame.shape[0] != height or frame.shape[1] != width:
+                    frame = cv2.resize(frame, (width, height))
+                writer.write(frame)
+        finally:
+            writer.release()
 
     def extract_predictions(self, image, object_predictions, source_identifier, frame_index=None):
         img_height, img_width = image.shape[:2]
@@ -92,6 +150,8 @@ class sahi_usage:
             return all_predictions
 
         idx = frame_index = 0
+        visual_paths = []
+        fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
         while True:
             ret, frame = cap.read()
             if not ret:
@@ -99,13 +159,18 @@ class sahi_usage:
             if frame_index % self.vid_strides != 0:
                 frame_index += 1
                 continue
-            object_predictions = self.sahi_predict(frame, detection_model)
+            detection_result = self.sahi_predict(frame, detection_model)
+            object_predictions = detection_result.object_prediction_list
             source_id = os.path.basename(video_path)
             preds = self.extract_predictions(frame, object_predictions, source_id, frame_index=idx)
             all_predictions.extend(preds)
+            visual_path = self._maybe_save_visual(detection_result, f"{Path(video_path).stem}_frame{idx:05d}")
+            if visual_path:
+                visual_paths.append(visual_path)
             frame_index += 1
             idx += 1
         cap.release()
+        self._export_video_from_visuals(visual_paths, video_path, fps)
         return all_predictions
 
     # --- NMS (Non-Maximum Suppression) ---
@@ -184,9 +249,11 @@ class sahi_usage:
                 if image is None:
                     print(f"Warning: Unable to read image {file_path}")
                     continue
-                object_predictions = self.sahi_predict(image, detection_model)
+                detection_result = self.sahi_predict(image, detection_model)
+                object_predictions = detection_result.object_prediction_list
                 preds = self.extract_predictions(image, object_predictions, os.path.basename(file_path), frame_index=frame_index)
                 all_predictions.extend(preds)
+                self._maybe_save_visual(detection_result, Path(file_path).stem)
                 frame_index += 1
         all_predictions.sort(key=lambda x: x[6])
         all_predictions = self.apply_nms(all_predictions)

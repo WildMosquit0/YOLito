@@ -6,7 +6,7 @@ model:
   task: slice
   vid_stride: 2
   weights: /home/bohbot/Evyatar/git/Mosquito_Supermodel/weights/last.pt
-output_dir: /home/bohbot/Evyatar/git/Mosquito_Supermodel/tests/results
+output_dir: /home/bohbot/Evyatar/git/Mosquito_Supermodel/tests/results/slice
 sahi:
   overlap_ratio: 0.1
   slice_size_h: 640

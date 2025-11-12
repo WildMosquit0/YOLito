@@ -1,15 +1,20 @@
-change_analyze_conf: true
 images_dir: /home/bohbot/Evyatar/git/Mosquito_Supermodel/tests/data
+
 model:
   conf_threshold: 0.2
   iou_threshold: 0.5
   task: slice
   vid_stride: 2
   weights: /home/bohbot/Evyatar/git/Mosquito_Supermodel/weights/last.pt
-output_dir: /home/bohbot/Evyatar/git/Mosquito_Supermodel/tests/results
+
+output_dir: /home/bohbot/Evyatar/git/Mosquito_Supermodel/tests/results/slice
+
 sahi:
   overlap_ratio: 0.1
   slice_size_h: 640
   slice_size_w: 640
+  
   track: true
+
+change_analyze_conf: true
 save_animations: true
