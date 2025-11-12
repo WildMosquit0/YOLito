@@ -97,8 +97,8 @@ coverage/
 .idea/
 
 # Model weights
-weights/
 checkpoints/
+.pt
 
 # movies format and results
 *.csv
