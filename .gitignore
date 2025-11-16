@@ -97,12 +97,3 @@ coverage/
 # IDE files (optional)
 .idea/
 
-# Model weights
-checkpoints/
-.pt
-
-# movies format and results
-*.csv
-*.png
-*.avi
-*.jpeg
