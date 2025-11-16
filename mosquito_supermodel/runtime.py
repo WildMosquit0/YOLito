@@ -7,7 +7,7 @@ from .config import RuntimeConfig, TaskName
 
 if TYPE_CHECKING:
     from src.analyze.analysis_pipeline import run_analysis as _run_analysis_type
-    from src.postprocess.infer_sngle_or_multi import (
+    from src.postprocess.infer_single_or_multi import (
         inference_single_or_multi as _inference_single_or_multi_type,
     )
 
@@ -45,7 +45,7 @@ def run_task(runtime_config: RuntimeConfig, *, preload: Optional[Dict] = None) -
     payload = _load_payload(runtime_config, preload)
 
     if payload.task == "infer":
-        from src.postprocess.infer_sngle_or_multi import inference_single_or_multi
+        from src.postprocess.infer_single_or_multi import inference_single_or_multi
 
         inference_single_or_multi(payload.data, payload.config_path)
         return

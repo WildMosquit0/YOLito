@@ -295,7 +295,7 @@ def _fill_missing_track_ids(track_ids: np.ndarray) -> np.ndarray:
     return track_ids
 
 
-def main(csv_file='results.csv', output_dir='.'):
+def track(csv_file='results.csv', output_dir='.'):
     try:
         df = pd.read_csv(csv_file, sep=',')
         # Remove extra whitespace from column names (if any)
