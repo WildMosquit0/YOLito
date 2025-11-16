@@ -1,9 +1,3 @@
-#!/usr/bin/env python3
-"""
-Modified SORT tracker example to read detections from a CSV file,
-compute object trajectories, and plot the (x, y) centers as lines.
-"""
-
 from __future__ import print_function
 
 import numpy as np
@@ -14,18 +8,11 @@ from scipy.optimize import linear_sum_assignment
 
 np.random.seed(0)
 
-# ------------------ SORT helper functions and classes ------------------
-
 def linear_assignment(cost_matrix):
-    """Solve the linear assignment problem using scipy."""
     x, y = linear_sum_assignment(cost_matrix)
     return np.array(list(zip(x, y)))
 
 def iou_batch(bb_test, bb_gt):
-    """
-    Computes IOU between two bboxes in the form [x1,y1,x2,y2].
-    Returns an array of IOU values.
-    """
     bb_gt = np.expand_dims(bb_gt, 0)
     bb_test = np.expand_dims(bb_test, 1)
     xx1 = np.maximum(bb_test[..., 0], bb_gt[..., 0])
@@ -42,23 +29,15 @@ def iou_batch(bb_test, bb_gt):
     return o
 
 def convert_bbox_to_z(bbox):
-    """
-    Converts a bounding box in [x1,y1,x2,y2] form to [x, y, s, r] where
-    x, y is the centre, s is scale (area) and r is aspect ratio.
-    """
     w = bbox[2] - bbox[0]
     h = bbox[3] - bbox[1]
     x = bbox[0] + w / 2.
     y = bbox[1] + h / 2.
-    s = w * h    # scale is just area
+    s = w * h
     r = w / float(h)
     return np.array([x, y, s, r]).reshape((4, 1))
 
 def convert_x_to_bbox(x, score=None):
-    """
-    Converts a bounding box from [x,y,s,r] (centre form) to [x1,y1,x2,y2].
-    If score is provided, returns [x1,y1,x2,y2,score].
-    """
     w = np.sqrt(x[2] * x[3])
     h = x[2] / w
     if score is None:
@@ -67,15 +46,8 @@ def convert_x_to_bbox(x, score=None):
         return np.array([x[0] - w / 2., x[1] - h / 2., x[0] + w / 2., x[1] + h / 2., score]).reshape((1, 5))
 
 class KalmanBoxTracker(object):
-    """
-    Represents the internal state of individual tracked objects observed as bounding boxes.
-    """
     count = 0
     def __init__(self, bbox):
-        """
-        Initializes a tracker using an initial bounding box.
-        """
-        # Define a constant velocity model.
         self.kf = KalmanFilter(dim_x=7, dim_z=4)
         self.kf.F = np.array([[1, 0, 0, 0, 1, 0, 0],
                               [0, 1, 0, 0, 0, 1, 0],
@@ -89,7 +61,7 @@ class KalmanBoxTracker(object):
                               [0, 0, 1, 0, 0, 0, 0],
                               [0, 0, 0, 1, 0, 0, 0]])
         self.kf.R[2:,2:] *= 10.
-        self.kf.P[4:,4:] *= 1000.  # High uncertainty for initial velocities.
+        self.kf.P[4:,4:] *= 1000.
         self.kf.P *= 10.
         self.kf.Q[-1,-1] *= 0.01
         self.kf.Q[4:,4:] *= 0.01
@@ -104,9 +76,6 @@ class KalmanBoxTracker(object):
         self.age = 0
 
     def update(self, bbox):
-        """
-        Updates the state vector with an observed bounding box.
-        """
         self.time_since_update = 0
         self.history = []
         self.hits += 1
@@ -114,9 +83,6 @@ class KalmanBoxTracker(object):
         self.kf.update(convert_bbox_to_z(bbox))
 
     def predict(self):
-        """
-        Advances the state vector and returns the predicted bounding box estimate.
-        """
         if (self.kf.x[6] + self.kf.x[2]) <= 0:
             self.kf.x[6] *= 0.0
         self.kf.predict()
@@ -128,19 +94,9 @@ class KalmanBoxTracker(object):
         return self.history[-1]
 
     def get_state(self):
-        """
-        Returns the current bounding box estimate.
-        """
         return convert_x_to_bbox(self.kf.x)
 
 def associate_detections_to_trackers(detections, trackers, iou_threshold=0.3):
-    """
-    Assigns detections to tracked objects (both in [x1,y1,x2,y2] form).
-    Returns:
-      - matches (each row is [detection_index, tracker_index])
-      - unmatched detections indices
-      - unmatched trackers indices
-    """
     if len(trackers) == 0:
         return np.empty((0, 2), dtype=int), np.arange(len(detections)), np.empty((0, 2), dtype=int)
 
@@ -179,9 +135,6 @@ def associate_detections_to_trackers(detections, trackers, iou_threshold=0.3):
     return matches, np.array(unmatched_detections), np.array(unmatched_trackers)
 
 class sahi_tracker(object):
-    """
-    SORT tracker: creates and updates tracklets for object detections.
-    """
     def __init__(self, max_age=1, min_hits=3, iou_threshold=0.3):
         self.max_age = max_age
         self.min_hits = min_hits
@@ -191,15 +144,8 @@ class sahi_tracker(object):
         
 
     def update(self, dets=np.empty((0, 5))):
-        """
-        Params:
-          dets - a numpy array of detections in the format [x1, y1, x2, y2, score]
-        Returns:
-          An array with each row in the format [x1, y1, x2, y2, track_id]
-        """
         self.frame_count += 1
 
-        # Get predicted locations from existing trackers.
         trks = np.zeros((len(self.trackers), 5))
         to_del = []
         ret = []
@@ -208,18 +154,15 @@ class sahi_tracker(object):
             trks[t] = [pos[0], pos[1], pos[2], pos[3], 0]
             if np.any(np.isnan(pos)):
                 to_del.append(t)
-        # Remove any trackers with NaN predictions.
         for t in reversed(to_del):
             self.trackers.pop(t)
         trks = np.ma.compress_rows(np.ma.masked_invalid(trks))
 
         matched, unmatched_dets, unmatched_trks = associate_detections_to_trackers(dets, trks, self.iou_threshold)
 
-        # Update matched trackers with assigned detections.
         for m in matched:
             self.trackers[m[1]].update(dets[m[0], :])
 
-        # Create and initialize new trackers for unmatched detections.
         for i in unmatched_dets:
             trk = KalmanBoxTracker(dets[i, :])
             self.trackers.append(trk)
@@ -228,21 +171,15 @@ class sahi_tracker(object):
         for trk in reversed(self.trackers):
             d = trk.get_state()[0]
             if (trk.time_since_update < 1) and (trk.hit_streak >= self.min_hits or self.frame_count <= self.min_hits):
-                ret.append(np.concatenate((d, [trk.id + 1])).reshape(1, -1))  # +1 so that IDs are positive
+                ret.append(np.concatenate((d, [trk.id + 1])).reshape(1, -1))
             i -= 1
-            # Remove dead tracklets.
             if trk.time_since_update > self.max_age:
                 self.trackers.pop(i)
         if len(ret) > 0:
             return np.concatenate(ret)
         return np.empty((0, 5))
 
-# ------------------ Main routine to load CSV, track, and plot ------------------
-
 def _detections_from_frame(frame_df: pd.DataFrame) -> np.ndarray:
-    """
-    Convert a frame slice to the [x1, y1, x2, y2, score] matrix expected by the tracker.
-    """
     if frame_df.empty:
         return np.empty((0, 5))
 
@@ -253,11 +190,6 @@ def _detections_from_frame(frame_df: pd.DataFrame) -> np.ndarray:
 
 
 def _match_tracks_to_detections(detections: np.ndarray, tracks: np.ndarray, threshold: float = 0.05) -> Dict[int, int]:
-    """
-    Match each detection row to the most likely tracker id using IoU to keep the association
-    consistent with the Kalman filter updates.
-    Returns a mapping of {detection_row_index: track_id}.
-    """
     assignments: Dict[int, int] = {}
     if detections.size == 0 or tracks.size == 0:
         return assignments
@@ -280,10 +212,6 @@ def _match_tracks_to_detections(detections: np.ndarray, tracks: np.ndarray, thre
 
 
 def _fill_missing_track_ids(track_ids: np.ndarray) -> np.ndarray:
-    """
-    Replace any -1 placeholders with unique positive ids so downstream aggregation
-    never encounters NaNs when SAHI tracking cannot associate a detection.
-    """
     missing = np.where(track_ids < 0)[0]
     if not len(missing):
         return track_ids
@@ -298,7 +226,6 @@ def _fill_missing_track_ids(track_ids: np.ndarray) -> np.ndarray:
 def track(csv_file='results.csv', output_dir='.'):
     try:
         df = pd.read_csv(csv_file, sep=',')
-        # Remove extra whitespace from column names (if any)
         df.columns = df.columns.str.strip()
     except Exception as e:
         print("Error reading CSV file:", e)
