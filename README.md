@@ -2,7 +2,7 @@
 
 **Universal YOLO-based mosquito detection, slicing, tracking, and behavioral analysis pipeline**
 
-This repository provides a flexible, end-to-end deep learning pipeline for detecting and analyzing mosquito behavior using YOLOv11, with support for slicing, multi-video tracking, and postprocessing.
+This repository provides a flexible, end-to-end deep learning pipeline for detecting and analyzing mosquito behavior using YOLito, with support for slicing, multi-video tracking, and postprocessing.
 
 ---
 <p align="center">
@@ -11,7 +11,7 @@ This repository provides a flexible, end-to-end deep learning pipeline for detec
 
 ## Features
 
--  **Inference** with YOLOv11
+-  **Inference** with pretrained YOLito
 -  **SAHI slicing** for small-object detection
 -  **Track ID continuity** across frames/videos
 -  **Behavioral metrics** (visit count, duration, distance — available in tracking mode)
@@ -21,14 +21,6 @@ This repository provides a flexible, end-to-end deep learning pipeline for detec
 ---
 
 ## 📦 Setup Instructions
-
-### Pip
-```bash
-python -m venv venv
-source venv/bin/activate
-cd path/to/Mosquito_Supermodel
-pip install -r requirements.txt
-```
 
 ### Editable install (new)
 
