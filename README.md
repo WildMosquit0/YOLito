@@ -47,7 +47,7 @@ config = build_runtime_config("infer")
 run_task(config)
 ```
 
-The CLI respects the legacy arguments (`--task/--task_name`) while adding niceties like `--config` overrides and opt-out profiling. By default it still looks for YAML files under `configs/`, but you can point it somewhere else via the `--config` flag or the `MOSQUITO_SUPERMODEL_CONFIG_DIR` environment variable when packaging the project inside Docker images.
+The CLI respects the legacy arguments (`--task/--task`) while adding niceties like `--config` overrides and opt-out profiling. By default it still looks for YAML files under `configs/`, but you can point it somewhere else via the `--config` flag or the `MOSQUITO_SUPERMODEL_CONFIG_DIR` environment variable when packaging the project inside Docker images.
 
 ---
 
@@ -160,14 +160,14 @@ All results are saved as `.csv` summaries and visual plots in the configured out
 
 ### Run Inference
 ```bash
-python main.py --task_name infer
+python main.py --task infer
 # or, after installing the package:
 mosquito-supermodel --task infer
 ```
 
 ### Run Analysis
 ```bash
-python main.py --task_name analyze
+python main.py --task analyze
 # or
 mosquito-supermodel --task analyze
 ```
