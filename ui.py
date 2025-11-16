@@ -171,15 +171,15 @@ def run_main():
     current_tab = tabview.get()  # "Infer" or "Analyze"
     if current_tab == "Infer":
         save_infer_config()
-        task_name = "infer"
+        task = "infer"
     else:
         save_analyze_config()
-        task_name = "analyze"
+        task = "analyze"
 
     # Run main.py
     python_exe = sys.executable
     script_path = os.path.join(os.path.dirname(__file__), "main.py")
-    subprocess.run([python_exe, script_path, "--task", task_name])
+    subprocess.run([python_exe, script_path, "--task", task])
 
 def on_tab_switch():
     """

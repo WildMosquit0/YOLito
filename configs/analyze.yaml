@@ -1,10 +1,10 @@
 heatmap:
   grid_size: 30
-  image_path: /home/bohbot/workspace/projects/test_sahi/frames
+  image_path: demo/output/frames
   min_count: 1
   true_axis: true
-input_csv: /home/bohbot/workspace/projects/test_sahi/results.csv
-output_dir: /home/bohbot/workspace/projects/test_sahi
+input_csv: demo/output/results.csv
+output_dir: demo/output
 plotxy:
   id_OR_class: class
   treatment_or_image_name: image_name
@@ -23,7 +23,3 @@ task:
   heatmap: false
   plotxy: true
   visits: true
-
-
-"\\wsl.localhost\Ubuntu\home\bohbot\Evyatar\runs\v3"
-yolo predict model=/home/bohbot/Evyatar/runs/detect/1000_each/weights/last.pt source=/runs/v3 save_txt=true line_width=1 conf=0.2 save_conf=false

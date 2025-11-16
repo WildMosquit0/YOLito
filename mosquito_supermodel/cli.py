@@ -25,11 +25,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--task",
-        "--task_name",
+        "--task",
         dest="task",
         default="infer",
         type=_task_type,
-        help="Task to execute (defaults to infer). Alias: --task_name for backwards compatibility.",
+        help="Task to execute (defaults to infer). Alias: --task for backwards compatibility.",
     )
     parser.add_argument(
         "--config",
