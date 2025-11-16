@@ -1,4 +1,4 @@
-# YOLito: a genarelyzed mosquito detector
+# YOLito: a generalized mosquito detector
 
 **Universal YOLO-based mosquito detection, slicing, tracking, and behavioral analysis pipeline**
 
