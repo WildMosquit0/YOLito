@@ -39,7 +39,7 @@ sahi_predict(
 
 
 # Load the YOLO model
-odel = YOLO(model)
+model = YOLO(model)
 # Perform prediction
 results = model.predict(
     source=source,

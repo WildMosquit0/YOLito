@@ -91,7 +91,7 @@ class ResultsParser:
 
         # --- Modified SAHI tracking call using the CSV file path 
         if str(self.sahi_track).lower() == 'true':
-            sahi_tracker.main(csv_file_path,self.output_dir)
+            sahi_tracker.track(csv_file_path,self.output_dir)
 
 
         print(f"Results saved to {csv_file_path}")

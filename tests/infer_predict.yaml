@@ -1,13 +1,13 @@
-images_dir: /home/bohbot/Evyatar/git/Mosquito_Supermodel/tests/data
+images_dir: tests/data
 
 model:
   conf_threshold: 0.2
   iou_threshold: 0.5
   task: predict
   vid_stride: 2
-  weights: /home/bohbot/Evyatar/git/Mosquito_Supermodel/weights/last.pt
+  weights: weights/last.pt
 
-output_dir: /home/bohbot/Evyatar/git/Mosquito_Supermodel/tests/results/predict
+output_dir: tests/results/predict
 
 sahi:
   overlap_ratio: 0.1
