@@ -1,10 +1,13 @@
-# 🦟 Mosquito Supermodel
+# YOLito: a generalized mosquito detector
 
 **Universal YOLO-based mosquito detection, slicing, tracking, and behavioral analysis pipeline**
 
 This repository provides a flexible, end-to-end deep learning pipeline for detecting and analyzing mosquito behavior using YOLOv11, with support for slicing, multi-video tracking, and postprocessing.
 
 ---
+<p align="center">
+  <img width="500" alt="Graphical abstract" src="resources/Graphical_abstract.png">
+</p>
 
 ## Features
 
@@ -176,5 +179,3 @@ mosquito-supermodel --task analyze
 - `results.csv`: merged behavior metrics
 - `videos/`, `frames/`, `csvs/`: organized intermediate outputs
 - `.png` plots: for visits, heatmaps, trajectories
-
-
