@@ -1,6 +1,0 @@
-define_roi:
-  folder_path: /home/bohbot/workspace/projects/arad/r/frames/frames  # This is a directory
-  csv_path: /home/bohbot/workspace/projects/arad/r/results.csv
-  output_dir: /home/bohbot/workspace/projects/arad/r
-  get_inner_roi: true
-  choose_frame_for_video: 1
