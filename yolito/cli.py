@@ -20,7 +20,7 @@ def _task_type(value: str) -> TaskName:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="mosquito-supermodel",
+        prog="yolito",
         description="Run inference or analysis tasks with a publishable CLI surface.",
     )
     parser.add_argument(

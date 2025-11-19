@@ -30,7 +30,7 @@ The repository now exposes an installable package so you can depend on it direct
 python -m pip install -e .
 ```
 
-Installing the package registers the `mosquito-supermodel` console script and enables imports such as:
+Installing the package registers the `yolito` console script and enables imports such as:
 
 ```python
 from yolito import build_runtime_config, run_task
@@ -154,14 +154,14 @@ All results are saved as `.csv` summaries and visual plots in the configured out
 ```bash
 python main.py --task infer
 # or, after installing the package:
-mosquito-supermodel --task infer
+yolito --task infer
 ```
 
 ### Run Analysis
 ```bash
 python main.py --task analyze
 # or
-mosquito-supermodel --task analyze
+yolito --task analyze
 ```
 
 ---
