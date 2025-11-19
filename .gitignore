@@ -1,0 +1,99 @@
+src/tests/
+runs/
+output_images/
+*:Zone.Identifier*
+datasets/
+output/
+src/tests/mos_vids/
+src/tests/plots/
+src/tests/csvs/
+src/tests/mery_track
+src/tests/vid
+src/tests/vids
+runs/
+plots/
+src/example
+weights/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.env/
+env/
+.venv/
+.conda/
+
+# Python specific settings
+*.env
+*.pkl
+*.sqlite3
+*.db
+
+# VSCode settings and workspace files
+.vscode/
+.settings/
+
+# pytest cache and other test-related files
+.pytest_cache/
+.cache/
+.tox/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Logs
+*.log
+*.out
+*.err
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Environment settings
+.env
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+MANIFEST
+
+# Documentation
+docs/_build/
+
+# PyInstaller files
+*.manifest
+*.spec
+
+# Distribution / Packaging
+.Python
+*.py[cod]
+__pycache__/
+*.so
+*.whl
+
+# Unit test / coverage reports
+coverage/
+
+# IDE files (optional)
+.idea/
+

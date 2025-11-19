@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=65", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mosquito-supermodel"
+version = "0.1.0"
+description = "Universal YOLO-based mosquito detection, slicing, tracking, and behavioral analysis pipeline."
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "UNLICENSED"}
+authors = [{name = "Mosquito Supermodel Team"}]
+dependencies = [
+    "numpy",
+    "pandas",
+    "matplotlib",
+    "seaborn",
+    "scipy",
+    "scikit-learn",
+    "plotnine",
+    "plotly",
+    "tqdm",
+    "opencv-python",
+    "Pillow",
+    "pyyaml",
+    "ultralytics",
+    "sahi",
+    "umap-learn",
+    "filterpy",
+    "pytest",
+]
+
+[project.urls]
+Homepage = "https://github.com/bohbotE/yolito"
+
+[project.scripts]
+mosquito-supermodel = "yolito.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "."}
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["yolito", "yolito.*", "src", "src.*"]
