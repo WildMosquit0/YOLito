@@ -179,11 +179,10 @@ yolito --task analyze
 ## Contact
 
 For questions, bug reports or collaboration inquiries, please contact:  
-**Evyatar Sar-Shalom**  or **Jonathan Bohbot**
+**Evyatar Sar-Shalom**  or **Jonathan Bohbot**  
 Department of Entomology, The Hebrew University of Jerusalem  
-the Neurobiology of Insect Olfaction Lab
-
-**evyatar.sar-shalom@mail.huji.ac.il**
+the Neurobiology of Insect Olfaction Lab  
+**evyatar.sar-shalom@mail.huji.ac.il**  
 **jonathan.bohbot@mail.huji.ac.il**
 
 ## Acknowledgments
