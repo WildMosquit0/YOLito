@@ -3,9 +3,9 @@ images_dir: demo/flying.MOV
 model:
   conf_threshold: 0.2
   iou_threshold: 0.5
-  task: slice
+  task: predict
   vid_stride: 2
-  weights: weights/last.pt
+  weights: "/home/wildmosquit0/workspace/weights/mosquitoes/1000_each/weights/last.pt"
 
 output_dir: demo/output
 

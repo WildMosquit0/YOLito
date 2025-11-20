@@ -1,6 +1,6 @@
 """
-High-level entry points that make the Mosquito Supermodel project consumable as a
-Python package without forcing callers to reach into the research scripts.
+High-level entry points that make the YOLito project consumable as a Python package
+without forcing callers to reach into the research scripts.
 """
 from __future__ import annotations
 

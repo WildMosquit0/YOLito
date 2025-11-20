@@ -150,6 +150,10 @@ All results are saved as `.csv` summaries and visual plots in the configured out
 
 ## Usage
 
+> The `yolito` console script becomes available only after installing the package
+> (e.g., `python -m pip install -e .`). You can always fall back to
+> `python -m yolito` if you prefer not to install it.
+
 ### Run Inference
 ```bash
 python main.py --task infer

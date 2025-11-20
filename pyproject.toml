@@ -9,7 +9,7 @@ description = "Universal YOLO-based mosquito detection, slicing, tracking, and b
 readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "UNLICENSED"}
-authors = [{name = "Mosquito Supermodel Team"}]
+authors = [{name = "YOLito Team"}]
 dependencies = [
     "numpy",
     "pandas",
