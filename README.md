@@ -170,7 +170,7 @@ yolito --task analyze
 
 ---
 
-## 📁 Output Structure
+## Output Structure
 
 - `results.csv`: merged behavior metrics
 - `videos/`, `frames/`, `csvs/`: organized intermediate outputs
@@ -179,12 +179,18 @@ yolito --task analyze
 ## Contact
 
 For questions, bug reports or collaboration inquiries, please contact:  
-**Evyatar Sar-Shalom**  
+**Evyatar Sar-Shalom**  or **Jonathan Bohbot**
 Department of Entomology, The Hebrew University of Jerusalem  
-the Neurobiology of Insect Olfaction Lab 
+the Neurobiology of Insect Olfaction Lab
+
 **evyatar.sar-shalom@mail.huji.ac.il**
+**jonathan.bohbot@mail.huji.ac.il**
 
 ## Acknowledgments
+
+YOLito was developed in the  
+**the Neurobiology of Insect Olfaction Lab**,  
+Department of Entomology, The Hebrew University of Jerusalem.
 
 We thank our collaborators across multiple laboratories for contributing mosquito specimens, supplying diverse image datasets, and offering valuable feedback that supported the development of YOLito.
 
