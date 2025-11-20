@@ -29,6 +29,9 @@ def fill_0_values(
 
     # 2. Determine the sorted list of unique intervals & step size
     intervals = sorted(df[time_col].unique())
+    if not intervals:
+        # Nothing to pad, return copy to avoid downstream IndexError.
+        return df.copy()
     if len(intervals) > 1:
         step = intervals[1] - intervals[0]
     else:

@@ -175,3 +175,17 @@ yolito --task analyze
 - `results.csv`: merged behavior metrics
 - `videos/`, `frames/`, `csvs/`: organized intermediate outputs
 - `.png` plots: for visits, heatmaps, trajectories
+
+## Contact
+
+For questions, bug reports or collaboration inquiries, please contact:  
+**Evyatar Sar-Shalom**  
+Department of Entomology, The Hebrew University of Jerusalem  
+the Neurobiology of Insect Olfaction Lab 
+**evyatar.sar-shalom@mail.huji.ac.il**
+
+## Acknowledgments
+
+We thank our collaborators across multiple laboratories for contributing mosquito specimens, supplying diverse image datasets, and offering valuable feedback that supported the development of YOLito.
+
+
