@@ -176,6 +176,18 @@ yolito --task analyze
 - `videos/`, `frames/`, `csvs/`: organized intermediate outputs
 - `.png` plots: for visits, heatmaps, trajectories
 
+## Resources
+
+### Training Dataset
+The complete YOLito dataset — comprising the original high-resolution mosquito images and the SAHI-generated 640×640 slices used for training — is publicly available:
+
+📁 **Dataset (Google Drive)**  
+[https://drive.google.com/drive/u/2/folders/1VQT-yOwJU7Cx8EghayYC-4GGgZPcxuBD](https://drive.google.com/drive/folders/1VQT-yOwJU7Cx8EghayYC-4GGgZPcxuBD?usp=sharing)
+
+Contents include:
+- Original images from all seven collaborating laboratories  
+- 640×640 SAHI-sliced training and validation tiles  
+
 ## Contact
 
 For questions, bug reports or collaboration inquiries, please contact:  
@@ -192,5 +204,3 @@ YOLito was developed in the
 Department of Entomology, The Hebrew University of Jerusalem.
 
 We thank our collaborators across multiple laboratories for contributing mosquito specimens, supplying diverse image datasets, and offering valuable feedback that supported the development of YOLito.
-
-
