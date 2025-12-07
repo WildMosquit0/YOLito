@@ -22,11 +22,11 @@ This repository provides a flexible, end-to-end deep learning pipeline for detec
 
 ## 📦 Setup Instructions
 
-### Editable install (new)
-
-The repository now exposes an installable package so you can depend on it directly:
+### Editable install
+Clone the repository and install it in editable (-e) mode:
 
 ```bash
+cd path/to/YOLito
 python -m pip install -e .
 ```
 
@@ -179,7 +179,7 @@ yolito --task analyze
 ## Resources
 
 ### Training Dataset
-The complete YOLito dataset, comprising the original high-resolution mosquito images and the SAHI-generated 640×640 slices used for training and validation, is publicly available:
+The complete YOLito dataset, comprising the original high-resolution mosquito images and the SAHI-generated 640×640 slices used for training and validation, is available upon request and will be publicly available upon publication:
 
 📁 **Dataset (Google Drive)**  
 [https://drive.google.com/drive/u/2/folders/1VQT-yOwJU7Cx8EghayYC-4GGgZPcxuBD](https://drive.google.com/drive/folders/1VQT-yOwJU7Cx8EghayYC-4GGgZPcxuBD?usp=sharing)
@@ -189,6 +189,25 @@ Contents include:
 - 640×640 SAHI-sliced training and validation tiles
 - Test dataset (unseen images)  
 
+## Citation
+
+If you use **YOLito**, its dataset, model weights, or analysis toolkit in your research, please cite our preprint:
+
+> **YOLito: A generalizable model for automated mosquito detection**  
+> *bioRxiv*, 2025  
+> [https://doi.org/10.1101/2025.11.20.689454](https://doi.org/10.1101/2025.11.20.689454)
+
+###  BibTeX
+```bibtex
+@article{sarshalom2025yolito,
+  title   = {YOLito: A generalizable model for automated mosquito detection},
+  author  = {Sar-Shalom, Evyatar and Kassner, Ziv and Sarig, Arad and Vinauger, Clément and Coutinho-Abreu, Iliano and Triana, Merybeth F. and Bouzada, Lucía I. and Pitts, R. Jason and Stensmyr, Marcus C. and Akbari, Omar S. and Papathanos, Philippos A. and Bohbot, Jonathan D.},
+  journal = {bioRxiv},
+  year    = {2025},
+  doi     = {10.1101/2025.11.20.689454},
+  url     = {https://www.biorxiv.org/content/early/2025/11/21/2025.11.20.689454}
+}
+```
 ## Contact
 
 For questions, bug reports or collaboration inquiries, please contact:  
