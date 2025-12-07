@@ -199,7 +199,7 @@ If you use **YOLito**, its dataset, model weights, or analysis toolkit in your r
 
 ###  BibTeX
 ```bibtex
-@article{sarshalom2025yolito,
+@article{sar-shalom2025yolito,
   title   = {YOLito: A generalizable model for automated mosquito detection},
   author  = {Sar-Shalom, Evyatar and Kassner, Ziv and Sarig, Arad and Vinauger, Clément and Coutinho-Abreu, Iliano and Triana, Merybeth F. and Bouzada, Lucía I. and Pitts, R. Jason and Stensmyr, Marcus C. and Akbari, Omar S. and Papathanos, Philippos A. and Bohbot, Jonathan D.},
   journal = {bioRxiv},
